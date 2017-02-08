@@ -14,6 +14,7 @@ build:
 	go build -v ${LDFLAGS} -o ${OUTDIR}${BINARY} main.go
 
 xbuild:
+	go get -d -v
 	env GOOS=linux GOARCH=amd64 go build -v ${LDFLAGS} -o ${OUTDIR}${BINARY}-linux main.go
 
 test:

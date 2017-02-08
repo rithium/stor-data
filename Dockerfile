@@ -6,7 +6,12 @@ COPY . $GOPATH/src/
 
 RUN apk update && apk upgrade
 
+RUN apk add git
 RUN apk add make
+
+RUN git config --global http.https://gopkg.in.followRedirects true
+
+RUN make xbuild
 
 RUN rm -rf /var/cache/apk/*
 
