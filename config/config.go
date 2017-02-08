@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"strconv"
+
 )
 
 type TomlConfig struct {
@@ -38,7 +39,7 @@ const ENV_CASSANDRA_PASS = "S_CASSANDRA_PASS"
 const ENV_CASSANDRA_KEYSPACE = "S_CASSANDRA_KEYSPACE"
 const ENV_CASSANDRA_PROTO = "S_CASSANDRA_PROTO"
 
-const DEFAULT_HTTP_URL = "localhost"
+const DEFAULT_HTTP_URL = "0.0.0.0"
 const DEFAULT_HTTP_PORT = "80"
 
 const DEFAULT_CASSANDRA_URL = "127.0.0.1"
