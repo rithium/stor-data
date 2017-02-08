@@ -1,0 +1,26 @@
+{
+  "instance_id": "data",
+  "services": {
+    "data": {
+      "host": "$SERVICE_HOST",
+      "port": 80,
+      "reporter_type": "zookeeper",
+      "zk_hosts": [
+        "$ZK_HOSTS"
+      ],
+      "zk_path": "/nerve/services/stor/data",
+      "check_interval": 1,
+      "checks": [
+        {
+          "type": "http",
+          "host": "localhost",
+          "port": 80,
+          "uri": "/health",
+          "timeout": 0.2,
+          "rise": 3,
+          "fall": 2
+        }
+      ]
+    }
+  }
+}
