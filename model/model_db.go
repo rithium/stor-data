@@ -8,6 +8,7 @@ import (
 )
 
 type Datastore interface {
+	GetLast(int)(*Data, error)
 	SaveData(*Data)(error)
 	GetData(*DataRequest)([]map[string]interface{}, error)
 }
