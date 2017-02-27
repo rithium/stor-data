@@ -7,8 +7,13 @@ import (
 )
 
 type TomlConfig struct {
+	AppConfig	AppConfig
 	HttpServer	HttpServerConfig
 	Cassandra	CassandraConfig
+}
+
+type AppConfig struct {
+	Logfile		string
 }
 
 type HttpServerConfig struct {
@@ -26,12 +31,15 @@ type CassandraConfig struct {
 
 var (
 	tomlConfig 	TomlConfig
+	App		AppConfig
 	HttpServer	HttpServerConfig
 	Cassandra	CassandraConfig
 )
 
 const ENV_HTTP_URL = "S_URL"
 const ENV_HTTP_PORT = "S_PORT"
+
+const ENV_LOGFILE = "S_LOGFILE"
 
 const ENV_CASSANDRA_URL = "S_CASSANDRA_URL"
 const ENV_CASSANDRA_USER = "S_CASSANDRA_USER"
@@ -42,6 +50,8 @@ const ENV_CASSANDRA_PROTO = "S_CASSANDRA_PROTO"
 const DEFAULT_HTTP_URL = "0.0.0.0"
 const DEFAULT_HTTP_PORT = "80"
 
+const DEFAULT_LOGFILE = "data.log"
+
 const DEFAULT_CASSANDRA_URL = "127.0.0.1"
 const DEFAULT_CASSANDRA_USER = ""
 const DEFAULT_CASSANDRA_PASS = ""
@@ -50,6 +60,8 @@ const DEFAULT_CASSANDRA_PROTO = "4"
 
 // Loads environment variables in to the config
 func LoadConfig() {
+	tomlConfig.AppConfig.Logfile = getEnv(ENV_LOGFILE, DEFAULT_LOGFILE)
+
 	tomlConfig.HttpServer.Uri = getEnv(ENV_HTTP_URL, DEFAULT_HTTP_URL)
 	tomlConfig.HttpServer.Port, _ = strconv.Atoi(getEnv(ENV_HTTP_PORT, DEFAULT_HTTP_PORT))
 
@@ -59,6 +71,7 @@ func LoadConfig() {
 	tomlConfig.Cassandra.Keyspace = getEnv(ENV_CASSANDRA_KEYSPACE, DEFAULT_CASSANDRA_KEYSPACE)
 	tomlConfig.Cassandra.ProtoVersion, _ = strconv.Atoi(getEnv(ENV_CASSANDRA_PROTO, DEFAULT_CASSANDRA_PROTO))
 
+	App		= tomlConfig.AppConfig
 	HttpServer 	= tomlConfig.HttpServer
 	Cassandra	= tomlConfig.Cassandra
 }

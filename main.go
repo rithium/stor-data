@@ -43,7 +43,7 @@ func init() {
 		os.Exit(0)
 	}
 
-	_, err := logger.NewRotatingFileWriter("logs/test.log", 500)
+	_, err := logger.NewRotatingFileWriter(config.App.Logfile, 500)
 
 	if err == nil {
 		log.SetOutput(logger.Logger)
