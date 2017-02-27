@@ -1,9 +1,9 @@
 
 CREATE KEYSPACE stor WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'}  AND durable_writes = true;
 
-CREATE TABLE data (
+CREATE TABLE stor.data (
  nodeId int,
- date timestamp,
- fields map<text, text>,
- PRIMARY KEY (nodeId,date)
-) WITH CLUSTERING ORDER BY (date DESC);
+ timestamp timestamp,
+ fields map<text, double>,
+ PRIMARY KEY (nodeId,timestamp)
+) WITH CLUSTERING ORDER BY (timestamp DESC);

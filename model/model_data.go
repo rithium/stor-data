@@ -24,7 +24,7 @@ type Data struct {
 	NodeId		int
 	Timestamp	time.Time
 	TTL		int
-	Data		map[string]interface{}
+	Data		map[string]float64
 }
 
 func NewData(nodeId int, timestamp time.Time, ttl int) (*Data) {
