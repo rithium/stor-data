@@ -86,7 +86,7 @@ func (db *DB) GetData(request *DataRequest) ([]map[string]interface{}, error) {
 
 	var buf bytes.Buffer
 
-	buf.WriteString(fmt.Sprintf("SELECT * FROM data WHERE nodeId = ? AND date >= ? and date <= ?"))
+	buf.WriteString(fmt.Sprintf("SELECT * FROM data WHERE nodeId = ? AND timestamp >= ? and timestamp <= ? order by timestamp asc"))
 
 	result, err := db.Query(buf.String(),
 		request.NodeId,
