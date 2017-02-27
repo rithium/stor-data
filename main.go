@@ -14,11 +14,14 @@ import (
 	"./model"
 	"encoding/json"
 	"strconv"
+	"github.com/rithium/logger"
 )
 
 type Env struct {
 	db model.Datastore
 }
+
+var rotatingLog *logger.RotatingFileWriter
 
 func init() {
 	versionFlag := flag.Bool("v", false, "prints version")
@@ -38,6 +41,12 @@ func init() {
 		log.Printf("Cassandra:\t%+v\n", config.Cassandra)
 
 		os.Exit(0)
+	}
+
+	_, err := logger.NewRotatingFileWriter("logs/test.log", 500)
+
+	if err == nil {
+		log.SetOutput(logger.Logger)
 	}
 }
 
