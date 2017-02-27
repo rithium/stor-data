@@ -13,6 +13,7 @@ import (
 	"github.com/rithium/version"
 	"./model"
 	"encoding/json"
+	"strconv"
 )
 
 type Env struct {
@@ -57,7 +58,8 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/data/{nodeId:[0-9]+}", env.handleDataGet).Methods("GET")
+	router.HandleFunc("/data/{nodeId:[0-9]+}", env.handleDataGet).Methods("GET").Queries("start", "", "end", "")
+	router.HandleFunc("/data/{nodeId:[0-9]+}/last", env.handleDataGetLast).Methods("GET")
 	router.HandleFunc("/data/{nodeId:[0-9]+}", env.handleDataPost).Methods("POST")
 	router.HandleFunc("/data/validate", env.handleDataValidate).Methods("POST")
 
@@ -109,6 +111,8 @@ func (env *Env) handleDataGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("%+v", request)
+
 	result, err := env.db.GetData(request)
 
 	if err != nil {
@@ -120,6 +124,29 @@ func (env *Env) handleDataGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(result)
+}
+
+func (env *Env) handleDataGetLast(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	nodeId, err := strconv.Atoi(vars["nodeId"])
+
+	if err != nil {
+		http.Error(w, "parsing nodeId"+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	data, err := env.db.GetLast(nodeId)
+
+
+	if err != nil {
+		http.Error(w, "finding last"+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(data)
 }
 
 func (env *Env) handleDataPost(w http.ResponseWriter, r *http.Request) {
@@ -151,6 +178,7 @@ func (env *Env) handleDataValidate(w http.ResponseWriter, r *http.Request) {
 	data := model.Data{}
 
 	if err := data.FromJson(r.Body); err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -158,6 +186,7 @@ func (env *Env) handleDataValidate(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%+v\n", data)
 
 	if err := data.Validate(); err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
