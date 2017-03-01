@@ -1,9 +1,9 @@
-// +build integration
+// +build unit
 package main
 
 import (
 	"testing"
-	"./model"
+	"github.com/rithium/stor-data/model"
 	"net/http/httptest"
 	"net/http"
 	"strings"
@@ -21,7 +21,7 @@ var dataTests = []struct {
 }{
 	{
 		"Valid request",
-		"{\"nodeId\":1, \"timestamp\":\""+time.Now().Format(time.RFC3339)+"\", \"data\":{\"temp\":\"2.5\"}}",
+		"{\"nodeId\":1, \"timestamp\":\""+time.Now().Format(time.RFC3339)+"\", \"data\":{\"temp\":2.5}}",
 		http.StatusOK,
 	},
 	{
@@ -30,13 +30,18 @@ var dataTests = []struct {
 		http.StatusBadRequest,
 	},
 	{
+		"String value instead of double",
+		"{\"nodeId\":1, \"timestamp\":\""+time.Now().Format(time.RFC3339)+"\", \"data\":{\"temp\":\"2.5\"}}",
+		http.StatusBadRequest,
+	},
+	{
 		"Missing timestamp",
-		"{\"nodeId\":1, \"data\":{}}",
+		"{\"nodeId\":1, \"data\":{\"temp\":\"2.5\"}}",
 		http.StatusBadRequest,
 	},
 	{
 		"Array instead of object for data array",
-		"{\"nodeId\":1, \"data\":[]}",
+		"{\"nodeId\":1, \"timestamp\":\""+time.Now().Format(time.RFC3339)+"\", \"data\":[]}",
 		http.StatusBadRequest,
 	},
 	{
@@ -60,22 +65,22 @@ var dataRequestTests = []struct {
 		"End before start time",
 		"nodeId=1&start="+time.Now().Format(time.RFC3339)+"&end="+time.Now().Add(-1 * time.Hour).Format(time.RFC3339),
 		http.StatusBadRequest,
-	},/*
+	},
 	{
 		"Missing node id",
-		"{\"start\":\""+time.Now().Format(time.RFC3339)+"\", \"end\":\""+time.Now().Add(1 * time.Hour).Format(time.RFC3339)+"\"}",
+		"start="+time.Now().Format(time.RFC3339)+"&end="+time.Now().Add(1 * time.Hour).Format(time.RFC3339),
 		http.StatusBadRequest,
 	},
 	{
 		"Missing start",
-		"{\"nodeId\":1, \"end\":\""+time.Now().Add(1 * time.Hour).Format(time.RFC3339)+"\"}",
+		"nodeId=1&end="+time.Now().Add(1 * time.Hour).Format(time.RFC3339),
 		http.StatusBadRequest,
 	},
 	{
 		"Missing end",
-		"{\"nodeId\":1, \"start\":\""+time.Now().Format(time.RFC3339)+"\"}",
+		"nodeId=1&start="+time.Now().Format(time.RFC3339),
 		http.StatusBadRequest,
-	},*/
+	},
 }
 
 func (mdb *mockDB) GetLast(int)(*model.Data, error) {
