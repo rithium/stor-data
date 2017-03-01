@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./config"
-	"log"
 	"github.com/gorilla/mux"
+	"github.com/rithium/stor-data/config"
+	"log"
 	"github.com/urfave/negroni"
 	"net/http"
 	"time"
@@ -11,7 +11,7 @@ import (
 	"flag"
 	"os"
 	"github.com/rithium/version"
-	"./model"
+	"github.com/rithium/stor-data/model"
 	"encoding/json"
 	"strconv"
 	"github.com/rithium/logger"
@@ -109,14 +109,14 @@ func (env *Env) handleDataGet(w http.ResponseWriter, r *http.Request) {
 	err := request.FromQuery(r.URL.Query())
 
 	if err != nil {
-		log.Println("data-get query:", err)
-		w.WriteHeader(http.StatusBadRequest)
+		log.Println("stor-data-get query:", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if err := request.Validate(); err != nil {
-		log.Println("data-get validation:", err)
-		w.WriteHeader(http.StatusBadRequest)
+		log.Println("stor-data-get validation:", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -125,8 +125,8 @@ func (env *Env) handleDataGet(w http.ResponseWriter, r *http.Request) {
 	result, err := env.db.GetData(request)
 
 	if err != nil {
-		log.Println("data-get exec:", err)
-		w.WriteHeader(http.StatusBadRequest)
+		log.Println("stor-data-get exec:", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -141,15 +141,14 @@ func (env *Env) handleDataGetLast(w http.ResponseWriter, r *http.Request) {
 	nodeId, err := strconv.Atoi(vars["nodeId"])
 
 	if err != nil {
-		http.Error(w, "parsing nodeId"+err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	data, err := env.db.GetLast(nodeId)
 
-
 	if err != nil {
-		http.Error(w, "finding last"+err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -162,21 +161,20 @@ func (env *Env) handleDataPost(w http.ResponseWriter, r *http.Request) {
 	data := model.Data{}
 
 	if err := data.FromJson(r.Body); err != nil {
-		log.Println("data-post:", err)
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if err := data.Validate(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err := env.db.SaveData(&data)
 
 	if err != nil {
-		log.Println("data-post:", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("POST data:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -187,16 +185,14 @@ func (env *Env) handleDataValidate(w http.ResponseWriter, r *http.Request) {
 	data := model.Data{}
 
 	if err := data.FromJson(r.Body); err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	log.Printf("%+v\n", data)
 
 	if err := data.Validate(); err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

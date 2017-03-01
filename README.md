@@ -11,7 +11,7 @@ OR
 The Dockerfile will copy the executable (bin/data-linux) to the container so before deploying be
 sure to `make xbuild`.
 
-`$ docker build -t rithium/data .`
+`$ docker build -t rithium/stor-data .`
 
 ## Cross Compile
 
@@ -26,7 +26,7 @@ OR
 
 OR
 
-`$ docker run -it -e ZK_HOSTS=45.79.159.146:2181 -e S_CASSANDRA_KEYSPACE=stor -e S_URL=0.0.0.0 -p 80:80 rithium/data`
+`$ docker run -it -e ZK_HOSTS=45.79.159.146:2181 -e S_CASSANDRA_KEYSPACE=stor -e S_URL=0.0.0.0 -p 80:80 rithium/stor-data`
 
 Will allow you to make requests from the host which is useful for testing the REST endpoints with postman.
 

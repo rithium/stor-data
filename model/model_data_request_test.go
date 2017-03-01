@@ -11,7 +11,7 @@ import (
 
 const validNodeId = 1
 
-// Test creating a new data request from raw values
+// Test creating a new stor-data request from raw values
 func TestNewDataRequest(t *testing.T) {
 	nodeId := validNodeId
 	start := time.Now()
@@ -22,7 +22,7 @@ func TestNewDataRequest(t *testing.T) {
 	checkDataRequestValues(dataRequest, nodeId, start, end, t)
 }
 
-// Test creating a new data request from a URL query
+// Test creating a new stor-data request from a URL query
 func TestFromQuery(t *testing.T) {
 	dataRequest := &model.DataRequest{}
 

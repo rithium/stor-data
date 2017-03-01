@@ -50,7 +50,7 @@ const ENV_CASSANDRA_PROTO = "S_CASSANDRA_PROTO"
 const DEFAULT_HTTP_URL = "0.0.0.0"
 const DEFAULT_HTTP_PORT = "80"
 
-const DEFAULT_LOGFILE = "data.log"
+const DEFAULT_LOGFILE = "stor-data.log"
 
 const DEFAULT_CASSANDRA_URL = "127.0.0.1"
 const DEFAULT_CASSANDRA_USER = ""

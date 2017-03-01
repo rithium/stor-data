@@ -4,7 +4,7 @@ import (
 	"github.com/gocql/gocql"
 	"log"
 	"time"
-	"../config"
+	"github.com/rithium/stor-data/config"
 )
 
 type Datastore interface {

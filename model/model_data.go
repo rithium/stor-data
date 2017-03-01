@@ -41,11 +41,7 @@ func NewData(nodeId int, timestamp time.Time, ttl int) (*Data) {
 func (d *Data) FromJson(rawJson io.Reader) (error) {
 	decoder := json.NewDecoder(rawJson)
 
-	if err := decoder.Decode(d); err != nil {
-		return err
-	}
-
-	return nil
+	return decoder.Decode(d)
 }
 
 func (d *Data) Validate() (error) {

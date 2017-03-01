@@ -78,6 +78,10 @@ var dataRequestTests = []struct {
 	},*/
 }
 
+func (mdb *mockDB) GetLast(int)(*model.Data, error) {
+	return nil, nil
+}
+
 func (mdb *mockDB) SaveData(data *model.Data) (error) {
 	return nil
 }
